@@ -7,12 +7,14 @@ function App() {
   const [result, setResult] = useState(null)
   const [error, setError] = useState('')
   const [showMonthDropdown, setShowMonthDropdown] = useState(false)
+  const [showDayDropdown, setShowDayDropdown] = useState(false)
   const [darkMode, setDarkMode] = useState(true)
 
   const yearRef = useRef(null)
   const monthRef = useRef(null)
   const dayRef = useRef(null)
   const monthDropdownRef = useRef(null)
+  const dayDropdownRef = useRef(null)
 
   const handleYearChange = (e) => {
     const value = e.target.value.replace(/[^0-9]/g, '')
@@ -64,6 +66,25 @@ function App() {
       }
     }, 100)
   }
+
+  const handleDaySelect = (dayNum) => {
+    setDay(dayNum.toString().padStart(2, '0'))
+    setShowDayDropdown(false)
+  }
+
+  const handleDayFocus = () => {
+    setShowDayDropdown(true)
+  }
+
+  const handleDayBlur = (e) => {
+    setTimeout(() => {
+      if (!dayDropdownRef.current?.contains(e.relatedTarget)) {
+        setShowDayDropdown(false)
+      }
+    }, 100)
+  }
+
+  const days = Array.from({ length: 31 }, (_, i) => i + 1)
 
   const months = [
     { num: 1, name: 'January' },
@@ -230,7 +251,7 @@ function App() {
 
           {/* Left - Main Card */}
           <div className={`${result ? '' : 'mx-auto'} w-96`}>
-            <div className="bg-white/[0.07] backdrop-blur-xl rounded-2xl border border-white/[0.12] shadow-2xl shadow-black/30 overflow-hidden">
+            <div className="bg-white/[0.07] backdrop-blur-xl rounded-2xl border border-white/[0.12] shadow-2xl shadow-black/30">
             {/* Card Header */}
             <div className="px-6 pt-5 pb-4 text-center border-b border-white/[0.08]">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl mb-3 border border-purple-500/20">
@@ -301,36 +322,56 @@ function App() {
                     {showMonthDropdown && (
                       <div
                         ref={monthDropdownRef}
-                        className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-[#1a1040]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/50 z-50 p-3"
-                        style={{ width: '300px' }}
+                        className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-[#1a1040]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/50 z-50 p-3 w-[600px]"
                       >
-                        <div className="grid grid-cols-4 gap-1.5">
+                        <div className="grid grid-cols-6 gap-2">
                           {months.map((m) => (
                             <button
                               key={m.num}
                               onClick={() => handleMonthSelect(m.num)}
-                              className="text-center px-2 py-2.5 text-sm rounded-xl hover:bg-purple-500/20 text-white transition-all duration-150 border border-transparent hover:border-purple-500/30"
+                              className="text-center px-3 py-2.5 text-sm rounded-lg bg-white/[0.06] border border-white/[0.12] hover:bg-purple-500/40 hover:border-purple-400/60 hover:shadow-lg hover:shadow-purple-500/20 text-white hover:text-white transition-all duration-200 hover:scale-105"
                             >
-                              <div className="font-semibold">{m.num.toString().padStart(2, '0')}</div>
-                              <div className="text-[10px] text-white/50">{m.name}</div>
+                              <div className="text-sm font-bold">{m.num.toString().padStart(2, '0')}</div>
+                              <div className="text-[9px] text-white/60">{m.name}</div>
                             </button>
                           ))}
                         </div>
                       </div>
                     )}
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 relative">
                     <input
                       ref={dayRef}
                       type="text"
                       value={day}
                       onChange={handleDayChange}
+                      onFocus={handleDayFocus}
+                      onBlur={handleDayBlur}
                       onKeyDown={(e) => handleKeyDown(e, 'day', monthRef)}
                       placeholder="DD"
                       maxLength={2}
                       className="w-full px-3 py-2.5 text-center bg-white/[0.06] border border-white/[0.12] rounded-lg text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-200 text-base font-semibold"
                     />
                     <p className="text-[10px] text-white/40 text-center mt-1.5 font-medium">Day</p>
+
+                    {showDayDropdown && (
+                      <div
+                        ref={dayDropdownRef}
+                        className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-[#1a1040]/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl shadow-black/50 z-50 p-3 w-[700px]"
+                      >
+                        <div className="grid grid-cols-11 gap-2">
+                          {days.map((d) => (
+                            <button
+                              key={d}
+                              onClick={() => handleDaySelect(d)}
+                              className="text-center px-3 py-2.5 text-sm rounded-lg bg-white/[0.06] border border-white/[0.12] hover:bg-purple-500/40 hover:border-purple-400/60 hover:shadow-lg hover:shadow-purple-500/20 text-white hover:text-white transition-all duration-200 hover:scale-105"
+                            >
+                              <div className="text-xs font-semibold">{d.toString().padStart(2, '0')}</div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
