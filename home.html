@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Age Calculator - Calculate Your Exact Age</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Inter & Caveat (for the handwritten quotes) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f4f8fd 0%, #e8f0fe 50%, #f0f4ff 100%);
+      background-attachment: fixed;
+    }
+    .font-handwriting {
+      font-family: 'Caveat', cursive;
+    }
+    .bg-pattern {
+      background-image: 
+        radial-gradient(circle at 25px 25px, rgba(59, 130, 246, 0.05) 2px, transparent 0),
+        radial-gradient(circle at 75px 75px, rgba(59, 130, 246, 0.03) 1px, transparent 0);
+      background-size: 100px 100px;
+    }
+    .dark body, body.dark {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    }
+    body.dark .bg-pattern {
+      background-image: 
+        radial-gradient(circle at 25px 25px, rgba(147, 197, 253, 0.05) 2px, transparent 0),
+        radial-gradient(circle at 75px 75px, rgba(147, 197, 253, 0.03) 1px, transparent 0);
+    }
+    .floating-shape {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: -1;
+      animation: float 20s ease-in-out infinite;
+    }
+    .shape-1 {
+      width: 400px;
+      height: 400px;
+      background: rgba(59, 130, 246, 0.15);
+      top: -100px;
+      right: -100px;
+      animation-delay: 0s;
+    }
+    .shape-2 {
+      width: 300px;
+      height: 300px;
+      background: rgba(168, 85, 247, 0.12);
+      bottom: 10%;
+      left: -80px;
+      animation-delay: -5s;
+    }
+    .shape-3 {
+      width: 250px;
+      height: 250px;
+      background: rgba(34, 197, 94, 0.1);
+      top: 40%;
+      right: 10%;
+      animation-delay: -10s;
+    }
+    .shape-4 {
+      width: 200px;
+      height: 200px;
+      background: rgba(251, 146, 60, 0.1);
+      bottom: -50px;
+      right: 30%;
+      animation-delay: -15s;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      33% { transform: translateY(-30px) rotate(5deg); }
+      66% { transform: translateY(20px) rotate(-5deg); }
+    }
+    body.dark .floating-shape.shape-1 { background: rgba(147, 197, 253, 0.1); }
+    body.dark .floating-shape.shape-2 { background: rgba(196, 181, 253, 0.08); }
+    body.dark .floating-shape.shape-3 { background: rgba(134, 239, 172, 0.06); }
+    body.dark .floating-shape.shape-4 { background: rgba(253, 186, 116, 0.06); }
+  </style>
+</head>
+<body class="bg-[#f4f8fd] text-slate-800 antialiased min-h-screen flex flex-col justify-between bg-pattern">
+  <div class="floating-shape shape-1"></div>
+  <div class="floating-shape shape-2"></div>
+  <div class="floating-shape shape-3"></div>
+  <div class="floating-shape shape-4"></div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="bg-white/80 backdrop-blur border-b border-slate-100 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-2.5">
+        <div class="bg-blue-600 text-white p-2 rounded-xl shadow-md shadow-blue-500/20">
+          <i data-lucide="calendar" class="w-5 h-5"></i>
+        </div>
+        <span class="text-xl font-extrabold tracking-tight text-slate-900">
+          Age <span class="text-blue-600">Calculator</span>
+        </span>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-slate-600">
+        <a href="#" class="text-blue-600 font-semibold relative py-1 after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-blue-600">Home</a>
+        <a href="#" class="hover:text-blue-600 transition-colors">Tools</a>
+        <a href="#" class="hover:text-blue-600 transition-colors">About</a>
+        <a href="#" class="hover:text-blue-600 transition-colors">FAQ</a>
+      </nav>
+
+      <!-- Day/Night Toggle Switch -->
+      <button aria-label="Toggle theme" class="w-14 h-7 bg-slate-900 rounded-full flex items-center justify-between px-1.5 shadow-inner transition-colors">
+        <span class="w-5 h-5 rounded-full bg-white flex items-center justify-center text-slate-900 shadow-sm">
+          <i data-lucide="sun" class="w-3.5 h-3.5"></i>
+        </span>
+        <i data-lucide="moon" class="w-3.5 h-3.5 text-slate-400 mr-0.5"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-10 w-full space-y-12">
+    
+    <!-- Hero Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-2">
+      <!-- Left Hero Text -->
+      <div class="lg:col-span-7 space-y-5">
+        <h1 class="text-4xl sm:text-5xl lg:text-[54px] font-extrabold tracking-tight text-slate-900 leading-[1.15]">
+          Calculate Your <br />
+          <span class="text-blue-600">Exact Age</span>
+        </h1>
+        <p class="text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl">
+          Find out your age in years, months, and days instantly. Also get your next birthday, total days lived and more.
+        </p>
+
+        <!-- Feature Badges -->
+        <div class="flex flex-wrap items-center gap-5 pt-2 text-sm font-semibold text-slate-700">
+          <div class="flex items-center gap-2">
+            <i data-lucide="zap" class="w-4 h-4 text-amber-500 fill-amber-500"></i>
+            <span>Fast &amp; Accurate</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 fill-emerald-500 text-white"></i>
+            <span>100% Free</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="heart" class="w-4 h-4 text-rose-500 fill-rose-500"></i>
+            <span>Easy to Use</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right 3D Art Mockup -->
+      <div class="lg:col-span-5 flex justify-center relative">
+        <div class="w-72 sm:w-80 h-72 sm:h-80 bg-blue-200/50 rounded-full blur-2xl absolute -top-4 -right-4 -z-10"></div>
+        <div class="relative w-full max-w-sm rounded-3xl p-6 flex flex-col items-center justify-center min-h-[260px] bg-gradient-to-br from-blue-100/60 to-white border border-blue-100 shadow-xl shadow-blue-500/5">
+          <!-- Calendar Card Graphic Representation -->
+          <div class="w-48 bg-white rounded-2xl shadow-lg border-t-8 border-red-500 p-4 transform -rotate-6 text-center">
+            <div class="flex justify-between px-3 -mt-6 mb-2">
+              <div class="w-2.5 h-5 bg-slate-300 rounded-full border border-slate-400"></div>
+              <div class="w-2.5 h-5 bg-slate-300 rounded-full border border-slate-400"></div>
+            </div>
+            <p class="font-handwriting text-2xl text-blue-700 leading-tight">Every<br/>Day<br/>Counts &hearts;</p>
+          </div>
+          <!-- Mini Cake Indicator -->
+          <div class="absolute bottom-4 right-6 text-center bg-white/90 backdrop-blur-sm px-4 py-2 rounded-2xl border border-pink-100 shadow-md">
+            <span class="text-3xl">🎂</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= INPUT & CARD SECTION ================= -->
+    <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50 border border-slate-100">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <!-- Form Left -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="flex items-center gap-2 text-blue-600 font-bold text-lg">
+            <i data-lucide="calendar" class="w-5 h-5"></i>
+            <h2 class="text-slate-900 text-lg sm:text-xl font-bold">Select Your Date of Birth</h2>
+          </div>
+
+          <!-- Date Input Box -->
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+              <i data-lucide="calendar" class="w-5 h-5"></i>
+            </div>
+            <input 
+              id="dobInput"
+              type="text" 
+              placeholder="dd-mm-yyyy" 
+              class="w-full pl-11 pr-11 py-3.5 bg-white border border-slate-200 rounded-xl text-slate-700 font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all text-sm sm:text-base"
+            />
+            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400">
+              <i data-lucide="calendar" class="w-5 h-5"></i>
+            </div>
+          </div>
+
+          <!-- Calculate Button -->
+          <button id="calculateBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-lg shadow-blue-600/25 flex items-center justify-center gap-2 transition-all active:scale-[0.99]">
+            <i data-lucide="calculator" class="w-5 h-5"></i>
+            <span>Calculate Age</span>
+          </button>
+
+          <!-- Secondary Actions -->
+          <div class="grid grid-cols-2 gap-3 pt-1">
+            <button id="resetBtn" class="w-full bg-blue-50 hover:bg-blue-100/80 text-blue-700 font-semibold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors text-sm">
+              <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+              <span>Reset</span>
+            </button>
+            <button id="todayBtn" class="w-full bg-emerald-50 hover:bg-emerald-100/80 text-emerald-700 font-semibold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-colors text-sm">
+              <i data-lucide="calendar-check" class="w-4 h-4"></i>
+              <span>Try with Today's Date</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Handwritten Quote Right -->
+        <div class="lg:col-span-5 hidden lg:flex items-center justify-center pl-6 border-l border-slate-100">
+          <div class="text-center font-handwriting select-none">
+            <p class="text-3xl text-blue-800 leading-tight">
+              A <br />
+              Healthier You <br />
+              <span class="text-blue-900 font-bold">Brighter Tomorrow</span>
+            </p>
+            <div class="text-2xl text-blue-700 mt-2">♡</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ================= RESULTS SECTION ================= -->
+    <div id="resultsSection" class="space-y-4 hidden">
+      <div class="flex items-center gap-2 text-blue-600 font-bold text-lg">
+        <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+        <h2 class="text-slate-900 text-lg font-bold">Your Age Result</h2>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <!-- Years -->
+        <div class="bg-[#ebfbf3] border border-emerald-100 rounded-2xl p-5 flex flex-col items-center justify-center text-center">
+          <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center mb-3">
+            <i data-lucide="user" class="w-4 h-4"></i>
+          </div>
+          <span id="years" class="text-3xl font-extrabold text-slate-900">0</span>
+          <span class="text-xs font-semibold text-slate-600 mt-1">Years</span>
+        </div>
+
+        <!-- Months -->
+        <div class="bg-[#f3f0fd] border border-indigo-100 rounded-2xl p-5 flex flex-col items-center justify-center text-center">
+          <div class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center mb-3">
+            <i data-lucide="calendar" class="w-4 h-4"></i>
+          </div>
+          <span id="months" class="text-3xl font-extrabold text-slate-900">0</span>
+          <span class="text-xs font-semibold text-slate-600 mt-1">Months</span>
+        </div>
+
+        <!-- Days -->
+        <div class="bg-[#fef1f3] border border-rose-100 rounded-2xl p-5 flex flex-col items-center justify-center text-center">
+          <div class="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center mb-3">
+            <i data-lucide="calendar" class="w-4 h-4"></i>
+          </div>
+          <span id="days" class="text-3xl font-extrabold text-slate-900">0</span>
+          <span class="text-xs font-semibold text-slate-600 mt-1">Days</span>
+        </div>
+
+        <!-- Next Birthday -->
+        <div class="bg-[#fff7eb] border border-amber-100 rounded-2xl p-5 flex flex-col items-center justify-center text-center">
+          <div class="w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center mb-3">
+            <i data-lucide="cake" class="w-4 h-4"></i>
+          </div>
+          <span id="nextBirthday" class="text-2xl font-extrabold text-slate-800">--</span>
+          <span class="text-xs font-semibold text-slate-600 mt-1">Next Birthday</span>
+        </div>
+
+        <!-- Days Until Birthday -->
+        <div class="bg-[#eefbfb] border border-teal-100 rounded-2xl p-5 flex flex-col items-center justify-center text-center">
+          <div class="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center mb-3">
+            <i data-lucide="hourglass" class="w-4 h-4"></i>
+          </div>
+          <span id="daysUntilBirthday" class="text-2xl font-extrabold text-slate-800">--</span>
+          <span class="text-xs font-semibold text-slate-600 mt-1">Days Until Birthday</span>
+        </div>
+
+        <!-- Total Days Lived -->
+        <div class="bg-[#eef5fe] border border-blue-100 rounded-2xl p-5 flex flex-col items-center justify-center text-center">
+          <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center mb-3">
+            <i data-lucide="grid" class="w-4 h-4"></i>
+          </div>
+          <span id="totalDays" class="text-2xl font-extrabold text-slate-800">--</span>
+          <span class="text-xs font-semibold text-slate-600 mt-1">Total Days Lived</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= MORE TOOLS SECTION ================= -->
+    <div class="space-y-4">
+      <div class="flex items-center gap-2 text-blue-600 font-bold text-lg">
+        <i data-lucide="wrench" class="w-5 h-5"></i>
+        <h2 class="text-slate-900 text-lg font-bold">More Useful Tools</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Card 1: Date Difference -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow relative">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
+              <i data-lucide="calendar" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 mb-1">Date Difference</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">Find the difference between two dates.</p>
+          </div>
+          <div class="mt-6 flex justify-end">
+            <span class="w-7 h-7 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors cursor-pointer">
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </span>
+          </div>
+        </div>
+
+        <!-- Card 2: Birthday Countdown -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow relative">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center mb-4">
+              <i data-lucide="cake" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 mb-1">Birthday Countdown</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">See how many days are left for your next birthday.</p>
+          </div>
+          <div class="mt-6 flex justify-end">
+            <span class="w-7 h-7 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors cursor-pointer">
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </span>
+          </div>
+        </div>
+
+        <!-- Card 3: Age on Specific Date -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow relative">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4">
+              <i data-lucide="timer" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 mb-1">Age on Specific Date</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">Calculate your age on any past or future date.</p>
+          </div>
+          <div class="mt-6 flex justify-end">
+            <span class="w-7 h-7 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors cursor-pointer">
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </span>
+          </div>
+        </div>
+
+        <!-- Card 4: Age in Days -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow relative">
+          <div>
+            <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4">
+              <i data-lucide="clock" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 mb-1">Age in Days</h3>
+            <p class="text-xs text-slate-500 leading-relaxed">Get your age in days, hours, minutes and seconds.</p>
+          </div>
+          <div class="mt-6 flex justify-end">
+            <span class="w-7 h-7 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors cursor-pointer">
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= QUOTE BANNER ================= -->
+    <div class="bg-[#eaf8ee] border border-emerald-100 rounded-2xl py-5 px-6 text-center shadow-sm">
+      <p class="text-emerald-950 font-bold text-base sm:text-lg flex items-center justify-center gap-2">
+        <span class="text-2xl text-emerald-500 leading-none">“</span>
+        Age is not just a number, it's a story of your journey.
+        <span class="text-2xl text-emerald-500 leading-none">”</span>
+      </p>
+      <p class="text-xs font-medium text-slate-500 mt-1">- Keep counting, keep growing -</p>
+    </div>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-[#0b1727] text-slate-300 mt-16 pt-10 pb-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800">
+        
+        <!-- Logo & Tagline -->
+        <div class="text-center md:text-left">
+          <div class="flex items-center justify-center md:justify-start gap-2.5">
+            <div class="bg-blue-600 text-white p-2 rounded-xl shadow-md shadow-blue-500/20">
+              <i data-lucide="calendar" class="w-5 h-5"></i>
+            </div>
+            <span class="text-xl font-extrabold text-white tracking-tight">
+              Age <span class="text-blue-500">Calculator</span>
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 mt-2 font-normal">Simple Tools for a Better Tomorrow.</p>
+        </div>
+
+        <!-- Footer Links -->
+        <div class="flex flex-wrap justify-center items-center gap-6 text-xs sm:text-sm font-medium text-slate-300">
+          <a href="#" class="hover:text-white transition-colors">Home</a>
+          <span class="text-slate-700">|</span>
+          <a href="#" class="hover:text-white transition-colors">Tools</a>
+          <span class="text-slate-700">|</span>
+          <a href="#" class="hover:text-white transition-colors">About</a>
+          <span class="text-slate-700">|</span>
+          <a href="#" class="hover:text-white transition-colors">FAQ</a>
+          <span class="text-slate-700">|</span>
+          <a href="#" class="hover:text-white transition-colors">Privacy</a>
+          <span class="text-slate-700">|</span>
+          <a href="#" class="hover:text-white transition-colors">Contact</a>
+        </div>
+
+        <!-- Social Icons -->
+        <div class="flex items-center gap-3">
+          <a href="#" class="w-9 h-9 rounded-full bg-[#1877F2] text-white flex items-center justify-center hover:opacity-90 transition-opacity">
+            <i data-lucide="facebook" class="w-4 h-4"></i>
+          </a>
+          <a href="#" class="w-9 h-9 rounded-full bg-[#1DA1F2] text-white flex items-center justify-center hover:opacity-90 transition-opacity">
+            <i data-lucide="twitter" class="w-4 h-4"></i>
+          </a>
+          <a href="#" class="w-9 h-9 rounded-full bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white flex items-center justify-center hover:opacity-90 transition-opacity">
+            <i data-lucide="instagram" class="w-4 h-4"></i>
+          </a>
+          <a href="#" class="w-9 h-9 rounded-full bg-[#FF0000] text-white flex items-center justify-center hover:opacity-90 transition-opacity">
+            <i data-lucide="youtube" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Copyright Bottom Bar -->
+      <div class="pt-6 text-center text-xs text-slate-500">
+        &copy; 2025 Age Calculator. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Initialize Lucide Icons & Dark Mode -->
+  <script>
+    lucide.createIcons();
+    
+    const toggleBtn = document.querySelector('[aria-label="Toggle theme"]');
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      const isDark = document.body.classList.contains('dark');
+      toggleBtn.querySelector('[data-lucide="sun"]').parentElement.style.transform = isDark ? 'translateX(28px)' : 'translateX(0)';
+      toggleBtn.querySelector('[data-lucide="sun"]').style.color = isDark ? '#fbbf24' : '';
+    });
+
+    const dobInput = document.getElementById('dobInput');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const todayBtn = document.getElementById('todayBtn');
+    const resultsSection = document.getElementById('resultsSection');
+
+    dobInput.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 2) value = value.slice(0, 2) + '-' + value.slice(2);
+      if (value.length > 5) value = value.slice(0, 5) + '-' + value.slice(5, 9);
+      e.target.value = value;
+    });
+
+    todayBtn.addEventListener('click', () => {
+      const today = new Date();
+      const dd = String(today.getDate()).padStart(2, '0');
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const yyyy = today.getFullYear();
+      dobInput.value = `${dd}-${mm}-${yyyy}`;
+    });
+
+    resetBtn.addEventListener('click', () => {
+      dobInput.value = '';
+      resultsSection.classList.add('hidden');
+      document.getElementById('years').textContent = '0';
+      document.getElementById('months').textContent = '0';
+      document.getElementById('days').textContent = '0';
+      document.getElementById('nextBirthday').textContent = '--';
+      document.getElementById('daysUntilBirthday').textContent = '--';
+      document.getElementById('totalDays').textContent = '--';
+    });
+
+    calculateBtn.addEventListener('click', () => {
+      const value = dobInput.value.trim();
+      const parts = value.split('-');
+      if (parts.length !== 3) {
+        alert('Please enter date in dd-mm-yyyy format');
+        return;
+      }
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10);
+      const year = parseInt(parts[2], 10);
+      if (isNaN(day) || isNaN(month) || isNaN(year) || day < 1 || day > 31 || month < 1 || month > 12 || year < 1900) {
+        alert('Please enter a valid date');
+        return;
+      }
+      const birthDate = new Date(year, month - 1, day);
+      if (birthDate.getDate() !== day || birthDate.getMonth() !== month - 1) {
+        alert('Invalid date');
+        return;
+      }
+      const today = new Date();
+      if (birthDate > today) {
+        alert('Date of birth cannot be in the future');
+        return;
+      }
+
+      let ageYears = today.getFullYear() - birthDate.getFullYear();
+      let ageMonths = today.getMonth() - birthDate.getMonth();
+      let ageDays = today.getDate() - birthDate.getDate();
+
+      if (ageDays < 0) {
+        ageMonths--;
+        const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+        ageDays += lastMonth.getDate();
+      }
+      if (ageMonths < 0) {
+        ageYears--;
+        ageMonths += 12;
+      }
+
+      let nextBirthdayYear = today.getFullYear();
+      let nextBirthday = new Date(nextBirthdayYear, birthDate.getMonth(), birthDate.getDate());
+      if (nextBirthday <= today) {
+        nextBirthday = new Date(nextBirthdayYear + 1, birthDate.getMonth(), birthDate.getDate());
+      }
+      const daysUntilBirthday = Math.ceil((nextBirthday - today) / (1000 * 60 * 60 * 24));
+      const totalDaysLived = Math.floor((today - birthDate) / (1000 * 60 * 60 * 24));
+
+      document.getElementById('years').textContent = ageYears;
+      document.getElementById('months').textContent = ageMonths;
+      document.getElementById('days').textContent = ageDays;
+      document.getElementById('nextBirthday').textContent = nextBirthday.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+      document.getElementById('daysUntilBirthday').textContent = daysUntilBirthday + ' days';
+      document.getElementById('totalDays').textContent = totalDaysLived.toLocaleString();
+
+      resultsSection.classList.remove('hidden');
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
