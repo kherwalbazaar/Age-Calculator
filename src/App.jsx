@@ -226,10 +226,10 @@ function App() {
 
       {/* Main Content */}
       <main className="relative z-10 flex-1 flex items-center justify-center p-4 pb-8">
-        <div className="w-full max-w-4xl flex gap-5">
+        <div className={`flex gap-5 transition-all duration-500 ${result ? 'w-full max-w-2xl' : ''}`}>
 
           {/* Left - Main Card */}
-          <div className="flex-1">
+          <div className={`${result ? '' : 'mx-auto'} w-96`}>
             <div className="bg-white/[0.07] backdrop-blur-xl rounded-2xl border border-white/[0.12] shadow-2xl shadow-black/30 overflow-hidden">
             {/* Card Header */}
             <div className="px-6 pt-5 pb-4 text-center border-b border-white/[0.08]">
